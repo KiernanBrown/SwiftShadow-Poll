@@ -5,6 +5,7 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Navigation from './shared/components/Navigation';
@@ -12,10 +13,12 @@ import Polls from './polls/pages/Polls';
 import PollDetails from './polls/pages/PollDetails';
 import './App.css';
 
+const NavigationWithRouter = withRouter(Navigation);
+
 function App() {
   return (
     <Router>
-      <Navigation />
+      <NavigationWithRouter />
       <main>
         <Switch>
           <Route path='/polls' exact>

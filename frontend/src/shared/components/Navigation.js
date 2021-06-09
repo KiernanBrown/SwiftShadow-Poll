@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 
 import './Navigation.css';
 
-const Navigation = () => {
+const Navigation = (props) => {
   return (
     <Navbar bg='dark' variant='dark'>
-      <Navbar.Brand href='/'>
+      <Navbar.Brand as={Link} to='/'>
         <img
           alt='Swift Shadow Logo'
           src={logo}
@@ -19,14 +19,14 @@ const Navigation = () => {
         />
         SwiftShadow
       </Navbar.Brand>
-      <Nav className='mr-auto'>
-        <Nav.Item eventKey='home'>
-          <Nav.Link as={Link} to='/'>
+      <Nav activeKey={props.location.pathname} className='mr-auto'>
+        <Nav.Item>
+          <Nav.Link eventKey='/' as={Link} to='/'>
             Home
           </Nav.Link>
         </Nav.Item>
-        <Nav.Item eventKey='polls'>
-          <Nav.Link as={Link} to='/polls'>
+        <Nav.Item>
+          <Nav.Link eventKey='/polls' as={Link} to='/polls'>
             Polls
           </Nav.Link>
         </Nav.Item>
