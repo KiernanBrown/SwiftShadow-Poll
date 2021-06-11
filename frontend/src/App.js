@@ -10,8 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Navigation from './shared/components/Navigation';
 import Polls from './polls/pages/Polls';
-import PollDetails from './polls/pages/PollDetails';
 import './App.css';
+import PollVoting from './polls/pages/PollVoting';
 
 const NavigationWithRouter = withRouter(Navigation);
 
@@ -25,7 +25,7 @@ function App() {
             <Polls />
           </Route>
           <Route path='/polls/:pollId'>
-            <PollDetails />
+            <PollVoting />
           </Route>
           <Redirect to="/" />
         </Switch>

@@ -13,6 +13,30 @@
   text-align: center;
 }
 
+.emptyPoll {
+  width: 60%;
+  margin: auto;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
 .pollDescription {
   text-align: left;
+}
+
+.optionImg {
+  width: auto;
+  height: auto;
+  margin: auto;
+  margin-top: 1.5rem;
+};
+
+.optionFooter {
+  display: flex;
+}
+
+.yourVotes {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  display: inline;
 }
