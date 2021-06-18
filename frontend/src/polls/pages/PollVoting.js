@@ -26,9 +26,7 @@ const DUMMY_OPTIONS = [
   {
     id: 'june-emotes_swifts7Flex',
     name: 'swifts7Flex',
-    imgs: [
-      'https://cdn.betterttv.net/emote/5f259adffe85fb4472d1d3ee/3x'
-    ],
+    imgs: ['https://cdn.betterttv.net/emote/5f259adffe85fb4472d1d3ee/3x'],
     poll: 'june-emotes',
   },
   {
@@ -38,10 +36,16 @@ const DUMMY_OPTIONS = [
   },
 ];
 
+const DUMMY_USER = {
+  name: 'Tester',
+  id: 'test1',
+  totalVotes: 5,
+};
+
 const PollVoting = (props) => {
   const pollId = useParams().pollId;
   const options = DUMMY_OPTIONS.filter((option) => option.poll === pollId);
-  return <PollOptionList options={options} />;
+  return <PollOptionList options={options} user={DUMMY_USER} />;
 };
 
 export default PollVoting;

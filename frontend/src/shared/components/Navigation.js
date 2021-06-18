@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom';
 import './Navigation.css';
 
 const Navigation = (props) => {
+  const getActiveKey = () => {
+    return props.location.pathname.length > 0 ? props.location.pathname.split('/')[1] : props.location.pathname;
+  };
+
   return (
     <Navbar bg='dark' variant='dark'>
       <Navbar.Brand as={Link} to='/'>
@@ -19,14 +23,14 @@ const Navigation = (props) => {
         />
         SwiftShadow
       </Navbar.Brand>
-      <Nav activeKey={props.location.pathname} className='mr-auto'>
+      <Nav activeKey={getActiveKey()} className='mr-auto'>
         <Nav.Item>
-          <Nav.Link eventKey='/' as={Link} to='/'>
+          <Nav.Link eventKey='' as={Link} to='/'>
             Home
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey='/polls' as={Link} to='/polls'>
+          <Nav.Link eventKey='polls' as={Link} to='/polls'>
             Polls
           </Nav.Link>
         </Nav.Item>

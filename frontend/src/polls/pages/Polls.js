@@ -3,7 +3,6 @@ import PollList from '../components/PollList';
 // Method to be removed at a later date. Just for testing.
 const DUMMY_ADD_DAYS = (date, days) => {
   let newDate = new Date(date);
-  console.dir(newDate.getTime());
   newDate.setTime(newDate.getTime() + days * 24 * 60 * 60 * 1000);
   return newDate;
 };
