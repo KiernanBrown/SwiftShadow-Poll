@@ -29,6 +29,7 @@
   height: auto;
   margin: auto;
   margin-top: 1.5rem;
+  cursor: pointer;
 };
 
 .optionFooter {
@@ -39,4 +40,23 @@
   margin-left: 1rem;
   margin-right: 1rem;
   display: inline;
+}
+
+.optionTitle {
+  cursor: pointer;
+}
+
+.optionTitle:hover {
+  opacity: 70%;
+}
+
+.callout {
+  width: 66%;
+  padding: 20px;
+  margin: auto;
+  margin-top: 1.5rem;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+  border-left-color: #999;
 }

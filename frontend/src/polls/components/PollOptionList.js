@@ -17,13 +17,13 @@ const countVotes = (user) => {
 const initUser = (user, options) => {
   let userObj = {
     id: user.id,
-    totalVotes: 10
+    totalVotes: 10,
   };
 
   userObj.voteMap = new Map();
 
   options.forEach((option) => {
-    if(!userObj.voteMap.has(option.id)) {
+    if (!userObj.voteMap.has(option.id)) {
       let optionVoteCount = 0;
       if (option.votes) {
         optionVoteCount = option.votes.filter((vote) => {
@@ -45,37 +45,43 @@ const PollOptionList = (props) => {
   );
 
   const updateUser = (optionId, votes) => {
-    console.dir(optionId);
-    console.dir(votes);
-
-    userVotes.voteMap.set(optionId, votes);
-
-    setUserVotes({
-      id: userVotes.id,
-      totalVotes: userVotes.totalVotes,
-      voteMap: userVotes.voteMap,
-      votes: countVotes(userVotes)
-    })
+    setUserVotes((prevUser) => {
+      prevUser.voteMap.set(optionId, votes);
+      return {
+        ...prevUser,
+        votes: countVotes(prevUser),
+      };
+    });
 
     // Write to database in the future
   };
 
+  console.dir(props);
+
   return (
-    <CardDeck className='emptyPoll'>
-      {props.options.map((option) => (
-        <PollOption
-          key={option.id}
-          id={option.id}
-          title={option.name}
-          description={option.description}
-          imgs={option.imgs}
-          poll={option.poll}
-          votes={option.votes}
-          user={userVotes}
-          updateHandler={updateUser.bind(this)}
-        />
-      ))}
-    </CardDeck>
+    <>
+      <aside role='note' className='callout'>
+        <h4>Placeholder Title</h4>
+        <div>You have {userVotes.totalVotes - userVotes.votes} votes remaining. Use the + and - buttons to add or subtract votes for a poll option respectively. You can use multiple votes on the same option.
+        
+        </div>
+      </aside>
+      <CardDeck className='emptyPoll'>
+        {props.options.map((option) => (
+          <PollOption
+            key={option.id}
+            id={option.id}
+            title={option.name}
+            description={option.description}
+            imgs={option.imgs}
+            poll={option.poll}
+            votes={option.votes}
+            user={userVotes}
+            updateHandler={updateUser.bind(this)}
+          />
+        ))}
+      </CardDeck>
+    </>
   );
 };
 

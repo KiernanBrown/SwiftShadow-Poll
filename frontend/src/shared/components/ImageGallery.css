@@ -1,0 +1,21 @@
+.carousel-caption {
+  position: relative;
+  left: 0;
+  top: 0;
+}
+
+.carousel-indicators li {
+  filter: invert(100%);
+}
+
+.carousel-control-prev, .carousel-control-next { 
+  filter: invert(100%);
+}
+
+.gallery-img {
+  width: auto;
+  height: 12em;
+  object-fit: scale-down;
+  display: block;
+  margin: auto;
+}
