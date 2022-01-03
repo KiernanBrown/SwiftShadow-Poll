@@ -1,20 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ImageGallery from '../../shared/components/ImageGallery';
 
 import './Poll.css';
+import { updatePendingVotes } from '../../features/userSlice';
 
 const PollOption = (props) => {
-  const { user, id } = props;
-
-  let [totalVotes, setTotalVotes] = useState(
-    props.votes ? props.votes.length : 0
-  );
+  const dispatch = useDispatch();
+  const authenticated = useSelector((state) => state.userSlice.authenticated);
+  const user = useSelector((state) => state.userSlice.user);
+  const { id, title, votes, description, imgs, poll } = props;
 
   const [showDetails, setShowDetails] = useState(false);
+
+  const countVotes = () => {
+    let voteCount = 0;
+    votes.forEach((voteObj) => {
+      voteCount += voteObj.votes;
+    });
+    return voteCount;
+  };
+
+  const getOptionVotes = () => {
+    let voteObj = votes.find((vote) => {
+      return vote.user === user._id;
+    });
+    return voteObj ? voteObj.votes : 0;
+  };
+
+  const getUserVotes = useCallback(() => {
+    let userVoteOBJ = user.polls.find((el) => {
+      return el.pollId === poll;
+    });
+
+    if (user.pendingVoteCount) {
+      return { ...userVoteOBJ, votes: userVoteOBJ.votes + user.pendingVoteCount };
+    }
+
+    return userVoteOBJ;
+  }, [user, poll]);
+
+  let [totalVotes, setTotalVotes] = useState(countVotes());
+  let [userVotes, setUserVotes] = useState(getUserVotes());
+
+  let [optionVotes, setOptionVotes] = useState(getOptionVotes());
 
   const handleCloseDetails = () => {
     setShowDetails(false);
@@ -23,55 +56,75 @@ const PollOption = (props) => {
     setShowDetails(true);
   };
 
+  useEffect(() => {
+    // Update the user's votes
+    if (authenticated) {
+      setUserVotes(getUserVotes());
+    }
+  }, [user, poll, authenticated, getUserVotes]);
+
   const addVote = () => {
     // Steps that need to take place here
     // 1. Update the users votes for this id
-    // 2. Update the total amount of votes for this id
-    if (user.votes < user.totalVotes) {
-      let voteCount = user.voteMap.get(id) + 1;
-      totalVotes++;
+    // 2. Update the total amount of votes for this i
+    if (userVotes.votes  < userVotes.voteCap) {
+      setOptionVotes(optionVotes + 1);
+      setTotalVotes(totalVotes + 1);
 
-      setTotalVotes(totalVotes);
-      props.updateHandler(id, voteCount);
+      dispatch(
+        updatePendingVotes({
+          optionId: id,
+          votes: 1,
+        })
+      );
     }
   };
 
   const removeVote = () => {
-    if (user.voteMap.get(id) - 1 >= 0) {
-      let voteCount = user.voteMap.get(id) - 1;
-      totalVotes--;
+    if (optionVotes > 0) {
+      //setUserVotes({ ...userVotes, votes: userVotes.votes - 1 });
+      setOptionVotes(optionVotes - 1);
+      setTotalVotes(totalVotes - 1);
 
-      setTotalVotes(totalVotes);
-      props.updateHandler(id, voteCount);
+      dispatch(
+        updatePendingVotes({
+          optionId: id,
+          votes: -1,
+        })
+      );
     }
   };
 
-  const headerImg = props.imgs ? props.imgs[0] : undefined;
+  const headerImg = imgs ? imgs[0] : undefined;
 
   const VoteSection = () => {
-    return (
-      <>
-        {user.voteMap.get(id) > 0 ? (
-          <Button variant='outline-primary' onClick={removeVote}>
-            -
-          </Button>
-        ) : (
-          <Button variant='outline-primary' disabled>
-            -
-          </Button>
-        )}
-        <p className='yourVotes'>Your Votes: {user.voteMap.get(id)}</p>
-        {user.votes < user.totalVotes ? (
-          <Button variant='outline-primary' onClick={addVote}>
-            +
-          </Button>
-        ) : (
-          <Button variant='outline-primary' disabled>
-            +
-          </Button>
-        )}
-      </>
-    );
+    if (authenticated) {
+      return (
+        <>
+          {optionVotes > 0 ? (
+            <Button variant='outline-primary' onClick={removeVote}>
+              -
+            </Button>
+          ) : (
+            <Button variant='outline-primary' disabled>
+              -
+            </Button>
+          )}
+          <p className='yourVotes'>Your Votes: {optionVotes}</p>
+          {props.remainingVotes > 0 ? (
+            <Button variant='outline-primary' onClick={addVote}>
+              +
+            </Button>
+          ) : (
+            <Button variant='outline-primary' disabled>
+              +
+            </Button>
+          )}
+        </>
+      );
+    }
+
+    return <></>;
   };
 
   const DetailsModal = () => {
@@ -85,13 +138,11 @@ const PollOption = (props) => {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title id='contained-modal-title-vcenter'>
-            {props.title}
-          </Modal.Title>
+          <Modal.Title id='contained-modal-title-vcenter'>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{props.description}</p>
-          <ImageGallery imgs={props.imgs}></ImageGallery>
+          <p>{description}</p>
+          <ImageGallery imgs={imgs}></ImageGallery>
 
           <div className='center'>
             <p>{totalVotes} Total Votes</p>
@@ -116,7 +167,7 @@ const PollOption = (props) => {
         />
         <Card.Body>
           <Card.Title className='optionTitle' onClick={handleShowDetails}>
-            {props.title}
+            {title}
           </Card.Title>
           <Card.Text>{totalVotes} Total Votes</Card.Text>
         </Card.Body>

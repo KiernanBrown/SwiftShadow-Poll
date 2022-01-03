@@ -27,7 +27,10 @@ function App() {
           <Route path='/polls/:pollId'>
             <PollVoting />
           </Route>
-          <Redirect to="/" />
+          <Route path='login' exact>
+            
+          </Route>
+          <Redirect to='/' />
         </Switch>
       </main>
     </Router>

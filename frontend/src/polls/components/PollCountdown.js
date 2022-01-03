@@ -5,7 +5,7 @@ const PollCountdown = (props) => {
   let timeRemaining = 1;
 
   const updateTime = () => {
-    timeRemaining = new Date(props.deadline - Date.now());
+    timeRemaining = new Date(Date.parse(props.deadline) - Date.now());
     const daysRemaining = timeRemaining / (1000 * 60 * 60 * 24);
     let newTimeStr =
       daysRemaining >= 2
