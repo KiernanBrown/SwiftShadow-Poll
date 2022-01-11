@@ -12,6 +12,7 @@ import Navigation from './shared/components/Navigation';
 import Polls from './polls/pages/Polls';
 import './App.css';
 import PollVoting from './polls/pages/PollVoting';
+import User from './users/pages/User';
 
 const NavigationWithRouter = withRouter(Navigation);
 
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route path='/polls/:pollId'>
             <PollVoting />
+          </Route>
+          <Route path='/users/:userId'>
+            <User />
           </Route>
           <Route path='login' exact>
             
